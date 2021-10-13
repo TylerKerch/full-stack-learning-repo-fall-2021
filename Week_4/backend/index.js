@@ -92,6 +92,24 @@ app.post("/user", (req, res) => {
 // Updating a User
 app.put("/user/:user_id", (req, res) => {
   //TODO
+  console.log("You called put")
+  const body = req.body;
+  let userToUpdate;
+  // Checks if user exists
+  let exists = false;
+  for (var key in users) {
+    if (users[key] == body) {
+      exists = true;
+      userToUpdate = users[key];
+    }
+  }
+  if (exists) {
+    userToUpdate.name = body.name;
+    userToUpdate.id = body.id;
+    userToUpdate.age = body.age;
+    return res.json({ msg: "Success", data: userToUpdate});
+  }else
+    return res.json({ msg: "User not found", data: {}});
 });
 // Deleting a User
 app.delete("/user/:user_id", (req, res) => {
