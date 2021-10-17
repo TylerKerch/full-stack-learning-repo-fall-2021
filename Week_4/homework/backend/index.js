@@ -113,5 +113,11 @@ app.put("/user/:user_id", (req, res) => {
 });
 // Deleting a User
 app.delete("/user/:user_id", (req, res) => {
-  //TODO
+    if(users[req.params.user_id]==undefined){
+      console.log("This user was not found in database");
+      return res.json({msg: "User not found", data: {}});
+    }
+    const userToBeDeleted = req.params.user_id;
+    delete users[req.params.user_id];
+    return res.json({msg: "User deleted", data: userToBeDeleted});
 });
