@@ -10,6 +10,19 @@
 <body>
 	<div id='main-container'>
 		<div id='weather-container'>
+			<div id='current-container'>
+				<h1 id='city'></h1>
+				<h3 id='current-date'></h3>
+				<div id='inner-container'>
+					<div id='details'>
+						<h1 id ='temperature'></h1>
+						<h3 id ='weather-type'></h3>
+						<h3 id="air-quality"></h3>
+					</div>
+					<img id="current-image"></img>
+				</div>
+			</div>
+			<div id="five-days"></div>
 		</div> 
 	</div>
 	<div id='side-container'>
@@ -23,7 +36,7 @@
 
 <script>
 		// USE YOUR OWN API KEY
-		const apiKey = "";
+		const apiKey = "df656b6a9ece98c76757e7064c76b094";
 
         // variable that stores the city that is chosen
 		let city;
@@ -38,6 +51,7 @@
 			var date = new Date();
 			date.setDate(date.getDate() + daysFromNow);
 			output += date.toLocaleString('en-US', { weekday: 'long' }).toUpperCase()
+			output += " " + date.toLocaleString('en-US', { month: 'long' }).toUpperCase()
 			output += ' ' + date.getDate()
 			return output
 		}
@@ -100,6 +114,63 @@
 				lon: lon
 			}
             // BEGIN CODING HERE
+			document.querySelector('#city').innerHTML = city.fullName;
+			document.querySelector('#current-date').innerHTML = formatDate();
+			getWeatherData();
+			getAQIData();
 		}
+		function getWeatherData() {
+			// creates the API call with the value from the search input as a query
+			let apiCall = `https://api.openweathermap.org/data/2.5/onecall?lat=${city.lat}&lon=${city.lon}&units=imperial&appid=${apiKey}`;
+			
+			fetch(apiCall)
+				.then((response) => 
+					// after recieving a response, take the response from the server and convert it to JSON 
+					response.json()
+				)
+				.then((data) => {
+					// after recieving the converted JSON data, pass the JSON to the renderSearchResults() function
+					weather = data;
+					document.querySelector('#temperature').innerHTML = Math.round(weather.current.temp) + "°";
+					document.querySelector('#weather-type').innerHTML = weather.current.weather[0].description;
+					document.querySelector('#current-image').src = `icons/${weather.current.weather[0].icon}.svg`
+					document.querySelector('#current-image').alt = "weather-icon"
+					
+					const fiveDays = document.querySelector('#five-days')
+					fiveDays.innerHTML = ""
+					for(let i=1; i < 6; i++){
+						
+						const iDay = document.createElement('div');
+						iDay.className = 'day-card'
+						const iDayDate = document.createElement('h3')
+						iDayDate.innerHTML = formatDate(i)
+						iDay.appendChild(iDayDate);
+						const iIcon = document.createElement("img")
+						iIcon.src = `icons/${weather.daily[i].weather[0].icon}.svg`
+						iDay.appendChild(iIcon);
+						const iTemp = document.createElement('h2')
+						iTemp.innerHTML = Math.round(weather.daily[i].temp.max) + ' to ' + Math.round(weather.daily[i].temp.min);
+						iDay.appendChild(iTemp);
+						fiveDays.appendChild(iDay);
+					}
+				});
+		}
+
+		function getAQIData() {
+			// creates the API call with the value from the search input as a query
+			let apiCall = `https://api.openweathermap.org/data/2.5/air_pollution?lat=${city.lat}&lon=${city.lon}&appid=${apiKey}`;
+			
+			fetch(apiCall)
+				.then((response) => 
+					// after recieving a response, take the response from the server and convert it to JSON 
+					response.json()
+				)
+				.then((data) => {
+					// after recieving the converted JSON data, pass the JSON to the renderSearchResults() function
+					aqi = data;
+					document.querySelector('#air-quality').innerText = "Air Quality Index: " + aqi.list[0].main.aqi;
+				});
+		}
+
 	</script>
 </html>
