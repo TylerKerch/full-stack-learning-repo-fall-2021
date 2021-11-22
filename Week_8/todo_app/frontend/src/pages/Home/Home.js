@@ -81,28 +81,30 @@ export default function Home() {
     // makes sure that taskName is not blank
     if (taskName) {
       // makes sure that taskName is a new task
-      toDo.includes(taskName)
-        ? alert("Task already exists")
-        : setToDo(toDo.concat(taskName));
-      setTaskName("");
+      if(todo.filter(function(tasks){
+        return tasks.description === taskName;
+      }).length>0){
+        alert("Task already exists");
+      }else{
+        // Call Backend Function
+        const request = await fetch("http://localhost:4000/todos", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("@token"),
+          },
+          body: JSON.stringify({ description: taskName }),
+        });
+        // Get Status and Response
+        const resp = await request.json();
+        const status = await request.status;
 
-      // Call Backend Function
-      const request = await fetch("http://localhost:4000/todos", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("@token"),
-        },
-        body: JSON.stringify({ description: taskName }),
-      });
-      // Get Status and Response
-      const resp = await request.json();
-      const status = await request.status;
-
-      // Update the List
-      if (status == 200) {
-        setToDo(toDo.concat(resp.data));
+        // Update the List
+        if (status == 200) {
+          setToDo(toDo.concat(resp.data));
+        }
       }
+      
     }
   }
 

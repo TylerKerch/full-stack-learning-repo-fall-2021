@@ -61,6 +61,7 @@ app.post("/todos", async (req, res) => {
 });
 
 // Toggle a Todo: returns the id of the todo toggled
+//Not really a delete, just toggles
 app.delete("/todos", async (req, res) => {
   const username = req.username;
   const id = req.body.id;

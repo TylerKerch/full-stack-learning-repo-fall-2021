@@ -1,45 +1,24 @@
 #input-box{
-    position: relative;
-    left: 20%;
-    right: 0%;
-    top: 0%;
-    bottom: 100%;
-
-    background: #FFFFFF;
-    border: 1px solid #000000;
-    box-sizing: border-box;
-    border-radius: 5px;
-    padding: 10px;
-    font-family: 'Roboto', sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 16px;
+  height: 32px;
+  width: 300px;
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 5px;
 }
 
-#done-button{
-    position: relative;
-    left: 30%;
-    right: 0%;
-    top: 0%;
-    bottom: 100%;
-    padding: 10px;
-    background: #ED7A11;
-    border: 3px solid #000000;
-    box-sizing: border-box;
-    border-radius: 50px;
-    font-family: 'Roboto', sans-serif;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 16px;
+.done-button{
+  height: 32px;
+  padding: 0px 15px;
+  border-radius: 50px;
+  border: 1px solid black;
+  background-color: #ed7a11;
+  color: white;
 }
 
-#input-container {
-    height: 50%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
+.search-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #todo-symbol{
