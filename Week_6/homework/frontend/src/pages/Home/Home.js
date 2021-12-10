@@ -2,11 +2,68 @@ import "./style.css";
 import ListItem from "../../components/ListItem/ListItem.js";
 import { useEffect, useState, Fragment } from "react";
 import Login from "../../components/Login/Login";
+const { default: jwtDecode } = require("jwt-decode");
 export default function Home() {
+  useEffect(() => {
+    async function loadCredentials() {
+      // If the token doesn't exist, do not log in
+      if (!localStorage.getItem("@token")) {
+        history.push("/login");
+      } else {
+        const request = await fetch("http://localhost:4000/auth", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("@token"),
+          },
+        });
+
+        // Get Status
+        const status = await request.status;
+
+        // If token is invalid, push to login
+        if (status != 200) {
+          history.push("/login");
+        }
+
+        // Get Name from JWT Token
+        const decode = jwtDecode(localStorage.getItem("@token"));
+        setName(decode.name);
+      }
+    }
+    async function loadTodos() {
+      const request = await fetch("http://localhost:4000/todos", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("@token"),
+        },
+      });
+      const resp = await request.json();
+      const status = await request.status;
+
+      // Success, load all the todos
+      if (status == 200) {
+        const data = resp.data;
+        const todos = [];
+        const completed = [];
+
+        data.map((item) => {
+          if (!item.status) {
+            todos.push(item);
+          } else {
+            completed.push(item);
+          }
+        });
+        setDone(completed);
+        setToDo(todos);
+      }
+    }
+    loadCredentials().then(() => {
+      loadTodos();
+    });
+  }, []);
+
   const[toDo,setToDo] = useState([]);
   const [taskName, setTaskName] = useState();
   const[done, setDone] = useState([]);
-
+  const [name, setName] = useState("");
 
   async function addTask() {
     // makes sure that taskName is not blank
