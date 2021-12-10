@@ -3,7 +3,7 @@ const credentials = require("./cred.json");
 
 firebase.initializeApp({
   credential: firebase.credential.cert(credentials),
-  databaseURL: "https://<yourproject>.firebaseio.com",
+  databaseURL: "https://firestbase.firebaseio.com",
 });
 
 module.exports = firebase;

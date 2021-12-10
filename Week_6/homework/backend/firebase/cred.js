@@ -1,10 +1,11 @@
 const firebase = require("firebase-admin");
 const credentials = require("./cred.json");
-
-//initializeApp (how does this work?)
+//firebase admin
+//firebase is something to call and get credentials from
+//firebase on the frontend
 firebase.initializeApp({
   credential: firebase.credential.cert(credentials),
-  databaseURL: "https://<yourproject>.firebaseio.com",
+  databaseURL: "https://<yoururl>.firebaseio.com",
 });
 
 module.exports = firebase;
